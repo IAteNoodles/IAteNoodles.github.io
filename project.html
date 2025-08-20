@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Project Plan: News Bias Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Calm Harmony" - A mix of warm neutrals (bg-stone-50, bg-stone-100), a complementary blue (bg-sky-600, border-sky-500), and a subtle amber accent (bg-amber-400). -->
+    <!-- Application Structure Plan: The SPA is designed as a project dashboard with a clear, task-oriented flow. A sticky sidebar navigation allows users to jump between key project pillars: Strategy, Data, Model, Explainability (XAI), Architecture, and Ethics. This non-linear structure is more intuitive for a project plan than the report's linear format, allowing team members to focus on their specific areas of responsibility. The main content area uses cards and interactive elements to present information concisely. A dynamic Gantt chart visualization provides an at-a-glance project timeline, which is more effective than the static table in the source report. This structure prioritizes usability and quick access to relevant information for all team members, regardless of their expertise. -->
+    <!-- Visualization & Content Choices: 
+        - Project Timeline: Report Info -> Project timeline and phases. Goal -> Visualize the entire project schedule. Viz/Presentation -> Interactive Gantt Chart (created with Chart.js). Interaction -> Hovering over bars shows details for each sprint. Justification -> A Gantt chart is the standard and most effective way to visualize a project timeline with dependencies and durations, far superior to a static table. Library -> Chart.js.
+        - Role Distribution: Report Info -> Team roles and responsibilities. Goal -> Clearly define who does what. Viz/Presentation -> Interactive cards with icons. Interaction -> Clicking on a role highlights their key tasks across the timeline. Justification -> Visual cards are more engaging and easier to scan than a dense list of text. Library -> HTML/CSS/JS.
+        - Ethical Risks: Report Info -> Table of ethical risks and mitigations. Goal -> Highlight critical ethical considerations. Viz/Presentation -> An interactive matrix/grid. Interaction -> Clicking on a risk reveals its mitigation strategy in a modal or expanded view. Justification -> This makes the dense table more digestible and focuses the user's attention on one risk at a time. Library -> HTML/CSS/JS.
+        - XAI Methods: Report Info -> Comparison of XAI methods. Goal -> Compare and contrast SHAP, LIME, and Self-Attention. Viz/Presentation -> A feature comparison chart (using Chart.js horizontal bar chart). Interaction -> Tooltips on hover provide more detailed explanations of each metric (Scope, Speed, etc.). Justification -> A chart provides a much clearer visual comparison of the trade-offs than a simple table. Library -> Chart.js.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link.active {
+            background-color: #0284c7; /* sky-600 */
+            color: white;
+            font-weight: 600;
+        }
+        .nav-link:not(.active):hover {
+            background-color: #e5e7eb; /* gray-200 */
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .card-hover-effect {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="flex flex-col lg:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-64 bg-white lg:h-screen lg:sticky top-0 p-4 lg:p-6 border-b lg:border-r border-stone-200">
+            <div class="flex items-center mb-8">
+                <div class="p-2 bg-sky-600 text-white rounded-lg mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3h2m-4 3H9m-4 4h2m-4 4h2m4-8h2m-4 4h2m-4 4h2m4-8h2m-4 4h2m-4 4h2m4-8h2" /></svg>
+                </div>
+                <h1 class="text-xl font-bold text-stone-900">Bias Detection Plan</h1>
+            </div>
+            <nav id="navigation" class="space-y-2">
+                <a href="#dashboard" class="nav-link flex items-center p-3 rounded-lg text-stone-700 active">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                    Dashboard
+                </a>
+                <a href="#strategy" class="nav-link flex items-center p-3 rounded-lg text-stone-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    Strategy & Roles
+                </a>
+                <a href="#data" class="nav-link flex items-center p-3 rounded-lg text-stone-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4M4 7l8 5 8-5" /></svg>
+                    Data Curation
+                </a>
+                <a href="#model" class="nav-link flex items-center p-3 rounded-lg text-stone-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                    Model Development
+                </a>
+                <a href="#xai" class="nav-link flex items-center p-3 rounded-lg text-stone-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                    Explainability (XAI)
+                </a>
+                <a href="#architecture" class="nav-link flex items-center p-3 rounded-lg text-stone-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9" /></svg>
+                    System Architecture
+                </a>
+                <a href="#ethics" class="nav-link flex items-center p-3 rounded-lg text-stone-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    Ethics & Risks
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 lg:p-10">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">Project Dashboard</h2>
+                <p class="text-stone-600 mb-8">An overview of the project timeline, key phases, and recommendations.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mb-8">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-4">Project Timeline (10 Weeks)</h3>
+                    <div class="chart-container">
+                        <canvas id="ganttChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">Core Objective</h3>
+                        <p class="text-stone-600">To build a news bias detection tool, including a browser extension, that identifies media bias, explains its reasoning using XAI, and recommends alternative perspectives to foster a more neutral understanding of current events.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">Key Recommendations</h3>
+                        <ul class="list-disc list-inside text-stone-600 space-y-2">
+                            <li>Adopt an *agile, iterative workflow* focusing on a Minimum Viable Product (MVP).</li>
+                            <li>Prioritize a *"Human-in-the-Loop"* approach for dataset creation to ensure quality and mitigate bias.</li>
+                            <li>Leverage a fine-tuned *RoBERTa model* for optimal performance in bias classification.</li>
+                            <li>Build with *transparency and accountability* at the core, clearly communicating the AI's role to users.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Strategy Section -->
+            <section id="strategy" class="content-section">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">Strategy & Roles</h2>
+                <p class="text-stone-600 mb-8">The project's success hinges on a pragmatic, agile approach and clearly defined roles to manage the ambitious scope within the tight deadline.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 card-hover-effect">
+                        <h4 class="font-bold text-lg text-sky-700">Project Leader</h4>
+                        <p class="text-sm text-stone-500 mb-3">Guides vision, architecture, and mentors the team.</p>
+                        <ul class="text-sm text-stone-600 list-disc list-inside space-y-1">
+                            <li>Oversee project vision</li>
+                            <li>Architect core systems</li>
+                            <li>Fine-tune lead model</li>
+                            <li>Integrate XAI components</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 card-hover-effect">
+                        <h4 class="font-bold text-lg text-sky-700">Data Engineer</h4>
+                        <p class="text-sm text-stone-500 mb-3">Builds and manages the data pipeline.</p>
+                        <ul class="text-sm text-stone-600 list-disc list-inside space-y-1">
+                            <li>Ethical web scraping</li>
+                            <li>API data collection</li>
+                            <li>Data cleaning</li>
+                            <li>Manage curated dataset</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 card-hover-effect">
+                        <h4 class="font-bold text-lg text-sky-700">Data Scientist</h4>
+                        <p class="text-sm text-stone-500 mb-3">Focuses on model training and evaluation.</p>
+                        <ul class="text-sm text-stone-600 list-disc list-inside space-y-1">
+                            <li>Data preprocessing</li>
+                            <li>Assist fine-tuning</li>
+                            <li>Model evaluation</li>
+                            <li>Test summarization model</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 card-hover-effect">
+                        <h4 class="font-bold text-lg text-sky-700">ML Engineer</h4>
+                        <p class="text-sm text-stone-500 mb-3">Develops the user-facing application.</p>
+                        <ul class="text-sm text-stone-600 list-disc list-inside space-y-1">
+                            <li>Browser extension dev</li>
+                            <li>Backend API creation</li>
+                            <li>Recommendation logic</li>
+                            <li>System integration</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Data Section -->
+            <section id="data" class="content-section">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">Data Curation Pipeline</h2>
+                <p class="text-stone-600 mb-8">A robust, ethical data pipeline is the foundation of the model. Quality in, quality out.</p>
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">1. Defining Bias</h3>
+                        <p class="text-stone-600">Bias is not a simple left/right spectrum. We must define and label for multiple types, including selection, word choice, and allocation bias. Using an LLM for initial labeling is risky due to inherent biases; it creates a feedback loop. *Human oversight is non-negotiable.*</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">2. Data Collection Strategy</h3>
+                        <p class="text-stone-600">Prioritize APIs like *NewsAPI.org* over scraping for reliability and ethics. Scraping should be a last resort, always respecting robots.txt and terms of service, with rate limiting to avoid server strain. A diverse set of sources is crucial to avoid representation bias.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">3. Human-in-the-Loop (HITL) Annotation</h3>
+                        <p class="text-stone-600">The HITL process is our primary defense against algorithmic bias. A diverse team of human annotators will create a "gold standard" dataset. This dataset will be used to validate and correct labels generated by a small language model, ensuring the final training data is as unbiased as possible.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Model Section -->
+            <section id="model" class="content-section">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">Model Development</h2>
+                <p class="text-stone-600 mb-8">Fine-tuning a transformer model offers superior performance on this specific classification task compared to general-purpose LLMs.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">Model Selection: RoBERTa vs. DistilBERT</h3>
+                        <p class="text-stone-600 mb-4">
+                            <strong class="text-sky-700">RoBERTa:</strong> The primary choice for its state-of-the-art performance and robust attention mechanism, ideal for the nuances of bias detection.
+                        </p>
+                        <p class="text-stone-600">
+                            <strong class="text-sky-700">DistilBERT:</strong> A viable, resource-efficient alternative. It's 60% faster while retaining 97% of BERT's performance, making it a pragmatic fallback if computational constraints arise.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">Fine-Tuning Process</h3>
+                        <ol class="list-decimal list-inside text-stone-600 space-y-2">
+                            <li><strong>Setup:</strong> Install transformers, torch, and datasets.</li>
+                            <li><strong>Tokenization:</strong> Prepare the HITL-curated dataset using AutoTokenizer.</li>
+                            <li><strong>Training:</strong> Load a pre-trained model (AutoModelForSequenceClassification) and fine-tune on the dataset using the Trainer API.</li>
+                            <li><strong>Evaluation:</strong> Rigorously assess performance on a held-out test set using F1-score and accuracy. Employ stratified k-fold cross-validation for robust results.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- XAI Section -->
+            <section id="xai" class="content-section">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">Explainability (XAI)</h2>
+                <p class="text-stone-600 mb-8">To build trust, the tool must explain why an article is flagged as biased. We will use a combination of methods for comprehensive and transparent reasoning.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mb-8">
+                     <h3 class="text-xl font-semibold text-stone-800 mb-4">XAI Method Comparison</h3>
+                    <div class="chart-container" style="height:300px; max-height:40vh;">
+                        <canvas id="xaiChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-stone-100 p-4 rounded-lg">
+                        <h4 class="font-semibold text-stone-800">Self-Attention</h4>
+                        <p class="text-sm text-stone-600">Visualizes the model's internal focus. Best for high-level debugging to see which words the model "looks at" during prediction.</p>
+                    </div>
+                    <div class="bg-stone-100 p-4 rounded-lg">
+                        <h4 class="font-semibold text-stone-800">SHAP</h4>
+                        <p class="text-sm text-stone-600">Provides a rigorous, game-theory-based explanation of each word's contribution to the bias score. Slower but offers high trustworthiness.</p>
+                    </div>
+                    <div class="bg-stone-100 p-4 rounded-lg">
+                        <h4 class="font-semibold text-stone-800">LIME</h4>
+                        <p class="text-sm text-stone-600">A faster, model-agnostic method that approximates the model's behavior for a single prediction. Ideal for quick, local explanations.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="content-section">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">System Architecture</h2>
+                <p class="text-stone-600 mb-8">A client-server model is essential for performance, offloading heavy computation from the user's browser to a dedicated backend.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex flex-col md:flex-row items-center justify-center text-center space-y-4 md:space-y-0 md:space-x-8">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-sky-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                                <span class="text-3xl">🌐</span>
+                            </div>
+                            <p class="font-semibold mt-2">Browser Extension</p>
+                            <p class="text-sm text-stone-500">(Frontend)</p>
+                        </div>
+                        <div class="font-mono text-sky-600 text-2xl font-bold">
+                            &lt;--&gt;
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-sky-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                                <span class="text-3xl">⚙</span>
+                            </div>
+                            <p class="font-semibold mt-2">RESTful API</p>
+                            <p class="text-sm text-stone-500">(Communication)</p>
+                        </div>
+                        <div class="font-mono text-sky-600 text-2xl font-bold">
+                            &lt;--&gt;
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-sky-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                               <span class="text-3xl">🖥</span>
+                            </div>
+                            <p class="font-semibold mt-2">API Server</p>
+                            <p class="text-sm text-stone-500">(Backend)</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 text-stone-600">
+                        <h4 class="font-semibold text-lg text-stone-800 mb-2">Communication Flow:</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>The *Browser Extension* (content script) reads the article text from the user's current page.</li>
+                            <li>On user request, it sends the text via a fetch call to our *RESTful API* (built with Flask/FastAPI).</li>
+                            <li>The *API Server* processes the text using the fine-tuned RoBERTa model, runs XAI analysis, and queries NewsAPI.org for related articles.</li>
+                            <li>The server returns a structured JSON response to the extension, which then displays the results in its UI.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ethics Section -->
+            <section id="ethics" class="content-section">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">Ethics & Risk Mitigation</h2>
+                <p class="text-stone-600 mb-8">This project carries significant social responsibility. Addressing ethical risks proactively is crucial to ensure the tool is beneficial, not harmful.</p>
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-amber-400 border-l-4">
+                        <h3 class="text-xl font-semibold text-amber-800 mb-2">Risk: Data & Algorithmic Bias</h3>
+                        <p class="text-stone-600"><strong class="font-semibold">Manifestation:</strong> Training data that over-represents certain viewpoints, or an algorithm that amplifies these skewed patterns.</p>
+                        <p class="text-stone-600 mt-2"><strong class="font-semibold text-sky-700">Mitigation:</strong> Use a diverse data collection strategy and a diverse team for annotation. The *Human-in-the-Loop* process is our primary control. Conduct regular bias audits of the model's output.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-amber-400 border-l-4">
+                        <h3 class="text-xl font-semibold text-amber-800 mb-2">Risk: AI-Generated Misinformation</h3>
+                        <p class="text-stone-600"><strong class="font-semibold">Manifestation:</strong> The "neutral" summarizer hallucinates facts or over-generalizes, creating a misleading narrative that strips important context.</p>
+                        <p class="text-stone-600 mt-2"><strong class="font-semibold text-sky-700">Mitigation:</strong> This feature must be treated as a *beta with clear user warnings*. Implement a human review process to check for accuracy. Prioritize the MVP before fully developing this high-risk feature.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-amber-400 border-l-4">
+                        <h3 class="text-xl font-semibold text-amber-800 mb-2">Risk: Negative Impact on Journalism</h3>
+                        <p class="text-stone-600"><strong class="font-semibold">Manifestation:</strong> The extension reduces user traffic to original news sources, harming publishers' revenue.</p>
+                        <p class="text-stone-600 mt-2"><strong class="font-semibold text-sky-700">Mitigation:</strong> Be fully transparent about the AI's role. *Always include prominent links to the original articles* and design the UI to encourage, not replace, clicks to the publisher's site.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navigationLinks = document.querySelectorAll('#navigation .nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            function switchTab(hash) {
+                navigationLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === hash);
+                });
+                contentSections.forEach(section => {
+                    // Activate the section whose id matches the hash
+                    section.classList.toggle('active', ('#' + section.id) === hash);
+                });
+            }
+
+            navigationLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    window.location.hash = targetId;
+                });
+            });
+            
+            window.addEventListener('hashchange', () => {
+                const hash = window.location.hash || '#dashboard';
+                switchTab(hash);
+            });
+
+            // Initial load
+            const initialHash = window.location.hash || '#dashboard';
+            switchTab(initialHash);
+
+
+            // Gantt Chart
+            const ganttCtx = document.getElementById('ganttChart').getContext('2d');
+            const ganttChart = new Chart(ganttCtx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Sprint 1: Foundation', 
+                        'Sprint 2: Model Dev', 
+                        'Sprint 3: Integration', 
+                        'Sprint 4: Expansion', 
+                        'Final Testing'
+                    ],
+                    datasets: [{
+                        label: 'Project Timeline (Weeks)',
+                        data: [
+                            [0, 2], // Sprint 1: Weeks 0-2
+                            [2, 4], // Sprint 2: Weeks 2-4
+                            [4, 6], // Sprint 3: Weeks 4-6
+                            [6, 8], // Sprint 4: Weeks 6-8
+                            [8, 10] // Testing: Weeks 8-10
+                        ],
+                        backgroundColor: [
+                            'rgba(56, 189, 248, 0.6)',
+                            'rgba(14, 165, 233, 0.6)',
+                            'rgba(2, 132, 199, 0.6)',
+                            'rgba(3, 105, 161, 0.6)',
+                            'rgba(245, 158, 11, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgb(56, 189, 248)',
+                            'rgb(14, 165, 233)',
+                            'rgb(2, 132, 199)',
+                            'rgb(3, 105, 161)',
+                            'rgb(245, 158, 11)'
+                        ],
+                        borderWidth: 1,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 10,
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const duration = context.raw[1] - context.raw[0];
+                                    return `${context.dataset.label}: Weeks ${context.raw[0]} - ${context.raw[1]} (${duration} weeks)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // XAI Chart
+            const xaiCtx = document.getElementById('xaiChart').getContext('2d');
+            const xaiChart = new Chart(xaiCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Self-Attention', 'SHAP', 'LIME'],
+                    datasets: [
+                        {
+                            label: 'Speed',
+                            data: [3, 1, 3],
+                            backgroundColor: 'rgba(56, 189, 248, 0.5)',
+                            borderColor: 'rgb(56, 189, 248)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Rigor/Trustworthiness',
+                            data: [1, 3, 2],
+                            backgroundColor: 'rgba(14, 165, 233, 0.5)',
+                            borderColor: 'rgb(14, 165, 233)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 3,
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    if (value === 1) return 'Low';
+                                    if (value === 2) return 'Moderate';
+                                    if (value === 3) return 'High';
+                                    return '';
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Relative Score'
+                            }
+                        },
+                        y: {
+                           grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
