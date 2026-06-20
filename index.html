@@ -1,13 +1,624 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Home</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IAteNoodles — Abhijit Kumar Singh</title>
+  <meta name="description" content="Portfolio of Abhijit Kumar Singh, aka IAteNoodles — CS & Data Science student building AI, backend, healthcare, and Linux-adjacent projects." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f2eee6;
+      --ink: #0d0d0d;
+      --muted: #6c6258;
+      --line: #ded7ca;
+      --line-dark: #1b1713;
+      --bowl: #fffaf1;
+      --broth: #f2b43f;
+      --broth-soft: #ffe1a0;
+      --chilli: #de3328;
+      --spring: #4b9b66;
+      --mint: #eaf1df;
+      --rose: #f4d6cf;
+      --soy: #17120f;
+      --blue: #1f5d8f;
+      --shadow: 6px 6px 0 var(--ink);
+      --soft-shadow: 4px 4px 0 rgba(24,17,13,.92);
+      --radius: 24px;
+      --sans: 'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(13,13,13,.04) 1px, transparent 1px),
+        linear-gradient(rgba(13,13,13,.04) 1px, transparent 1px),
+        var(--paper);
+      background-size: 34px 34px;
+      font-family: var(--sans);
+      padding: 0 5vw 42px;
+    }
+
+    a { color: inherit; }
+    ::selection { background: var(--broth); color: var(--ink); }
+
+    .wrap { max-width: 1120px; margin: 0 auto; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 0 -5vw;
+      padding: 14px 5vw;
+      background: rgba(244,234,217,.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: -.04em;
+    }
+
+    .bowlmark {
+      width: 42px;
+      height: 34px;
+      position: relative;
+      display: inline-block;
+    }
+    .bowlmark:before {
+      content: '';
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      bottom: 2px;
+      height: 19px;
+      border: 3px solid var(--ink);
+      border-top: 0;
+      background: var(--bowl);
+      border-radius: 0 0 22px 22px;
+    }
+    .bowlmark:after {
+      content: '~~~~';
+      position: absolute;
+      left: 1px;
+      top: -2px;
+      font: 700 17px/1 var(--mono);
+      color: var(--chilli);
+      letter-spacing: -5px;
+      transform: rotate(-5deg);
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font: 700 13px/1 var(--mono);
+      text-transform: lowercase;
+    }
+    .navlinks a {
+      text-decoration: none;
+      padding: 10px 12px;
+      border: 2px solid transparent;
+      border-radius: 999px;
+    }
+    .navlinks a:hover {
+      border-color: var(--ink);
+      background: var(--bowl);
+    }
+
+    .hero {
+      padding: clamp(72px, 9vw, 112px) 0 clamp(66px, 7vw, 92px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: clamp(36px, 6vw, 72px);
+      align-items: end;
+    }
+
+    .stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--bowl);
+      box-shadow: 3px 3px 0 var(--ink);
+      font: 700 12px/1 var(--mono);
+      text-transform: lowercase;
+    }
+    .stamp i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--spring);
+      border: 2px solid var(--ink);
+      display: block;
+    }
+
+    h1 {
+      margin: 26px 0 20px;
+      font-size: clamp(58px, 11vw, 148px);
+      line-height: .78;
+      letter-spacing: -.09em;
+      max-width: 830px;
+    }
+    .noodles-word {
+      display: inline-block;
+      color: var(--chilli);
+      text-shadow: 4px 4px 0 var(--ink);
+      transform: rotate(-1.5deg);
+      margin-left: -.04em;
+    }
+
+    .lead {
+      max-width: 690px;
+      font-size: clamp(18px, 2vw, 23px);
+      line-height: 1.45;
+      margin: 0;
+      color: #322721;
+      font-weight: 500;
+      letter-spacing: -.025em;
+    }
+
+    .quicklinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 2px solid var(--ink);
+      background: var(--bowl);
+      box-shadow: 4px 4px 0 var(--ink);
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform .14s ease, box-shadow .14s ease;
+    }
+    .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+    .btn.primary { background: var(--broth); }
+
+    .profile-card {
+      border: 2px solid var(--ink);
+      border-radius: 30px;
+      background: linear-gradient(180deg, var(--bowl), #fff0cc);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      transform: rotate(1.1deg);
+    }
+    .profile-card h2 {
+      margin: 0 0 4px;
+      font-size: 32px;
+      line-height: 1.02;
+      letter-spacing: -.07em;
+    }
+    .scratch {
+      position: relative;
+      display: inline-block;
+      color: var(--muted);
+      margin-right: 8px;
+    }
+    .scratch:after {
+      content: '';
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      top: 54%;
+      height: 12px;
+      background: repeating-linear-gradient(-14deg, transparent 0 4px, var(--chilli) 4px 7px, transparent 7px 11px);
+      transform: rotate(-3deg);
+      opacity: .92;
+    }
+    .profile-card p { margin: 0; color: var(--muted); line-height: 1.5; }
+    .dev-fields {
+      display: grid;
+      gap: 9px;
+      margin-top: 18px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .dev-field {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 10px;
+      padding: 10px 11px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: var(--paper);
+    }
+    .dev-field span:first-child {
+      color: var(--chilli);
+      font-weight: 700;
+      text-transform: lowercase;
+    }
+    .dev-field span:last-child { font-weight: 700; }
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .profile-card .mini-grid { grid-template-columns: 1fr; }
+    .mini {
+      min-height: 94px;
+      border: 2px solid var(--ink);
+      border-radius: 18px;
+      padding: 12px;
+      background: var(--paper);
+    }
+    .mini b { display: block; font-size: 27px; letter-spacing: -.07em; }
+    .mini span { display: block; font: 700 11px/1.35 var(--mono); color: var(--muted); margin-top: 4px; }
+
+    section {
+      padding: clamp(68px, 8vw, 96px) 0;
+      border-top: 2px solid var(--ink);
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: clamp(26px, 5vw, 48px);
+      margin-bottom: 34px;
+    }
+    .kicker {
+      font: 700 13px/1 var(--mono);
+      color: var(--chilli);
+      text-transform: lowercase;
+      padding-top: 10px;
+    }
+    h2.section-title {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 78px);
+      line-height: .9;
+      letter-spacing: -.075em;
+      max-width: 780px;
+    }
+    .section-copy {
+      font-size: 18px;
+      line-height: 1.62;
+      color: #3b3029;
+      margin: 18px 0 0;
+      max-width: 760px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .card {
+      border: 2px solid var(--ink);
+      background: var(--bowl);
+      border-radius: var(--radius);
+      padding: clamp(24px, 3vw, 30px);
+      box-shadow: var(--soft-shadow);
+    }
+    .card:nth-child(2n) { background: #fff3d5; }
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 25px;
+      letter-spacing: -.05em;
+    }
+    .card p { margin: 0; color: #3d3129; line-height: 1.62; }
+
+    .projects { display: grid; gap: 18px; }
+    .project {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: clamp(24px, 4vw, 40px);
+      padding: clamp(26px, 4vw, 36px);
+      border: 2px solid var(--ink);
+      border-radius: 26px;
+      background: var(--bowl);
+      box-shadow: var(--soft-shadow);
+    }
+    .project:nth-child(2) { background: var(--broth-soft); }
+    .project:nth-child(3) { background: var(--mint); }
+    .project:nth-child(4) { background: var(--rose); }
+    .project h3 {
+      margin: 0 0 9px;
+      font-size: clamp(26px, 3vw, 42px);
+      line-height: .98;
+      letter-spacing: -.07em;
+    }
+    .project p { margin: 0; color: #40332b; line-height: 1.62; }
+    .project aside {
+      font: 700 12px/1.55 var(--mono);
+      color: #5c5048;
+      text-align: right;
+      padding-top: 4px;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .tag {
+      display: inline-flex;
+      padding: 8px 10px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--paper);
+      font: 700 11px/1 var(--mono);
+      white-space: nowrap;
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .stack-card {
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--bowl);
+      box-shadow: var(--soft-shadow);
+      padding: clamp(22px, 3vw, 28px);
+      min-height: 190px;
+    }
+    .stack-card:nth-child(2), .stack-card:nth-child(5) { background: #fff0cc; }
+    .stack-card:nth-child(3), .stack-card:nth-child(6) { background: #eef4e7; }
+    .stack-card h3 { margin: 0 0 18px; font-size: 23px; letter-spacing: -.05em; }
+
+    .timeline { display: grid; gap: 18px; }
+    .time-row {
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--bowl);
+      box-shadow: var(--soft-shadow);
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: clamp(22px, 4vw, 34px);
+      padding: clamp(24px, 3vw, 30px);
+    }
+    .date {
+      font: 700 12px/1.35 var(--mono);
+      color: var(--chilli);
+      text-transform: lowercase;
+    }
+    .time-row h3 { margin: 0 0 8px; font-size: 24px; letter-spacing: -.05em; }
+    .time-row p { margin: 0; color: #40332b; line-height: 1.62; }
+
+    .contact-card {
+      border: 2px solid var(--ink);
+      border-radius: 34px;
+      background: linear-gradient(135deg, var(--broth), #f6c86d 55%, #fff0cc);
+      box-shadow: var(--shadow);
+      padding: clamp(34px, 7vw, 68px);
+    }
+    .contact-card h2 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 86px);
+      line-height: .88;
+      letter-spacing: -.08em;
+      max-width: 860px;
+    }
+    .contact-card p {
+      font-size: 19px;
+      line-height: 1.55;
+      max-width: 720px;
+      margin: 22px 0 30px;
+      color: #2f241c;
+      font-weight: 600;
+    }
+
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      border-top: 2px solid var(--ink);
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font: 700 12px/1.4 var(--mono);
+      color: var(--muted);
+    }
+
+    @media (max-width: 880px) {
+      .navlinks { display: none; }
+      .hero, .section-head, .about-grid, .project, .time-row { grid-template-columns: 1fr; }
+      .profile-card { transform: none; }
+      .project aside { text-align: left; }
+      .stack-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      body { padding-left: 4vw; padding-right: 4vw; }
+      header { margin-left: -4vw; margin-right: -4vw; padding-left: 4vw; padding-right: 4vw; }
+      .mini-grid { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(54px, 17vw, 86px); }
+      .card, .project, .stack-card, .time-row { padding: 19px; }
+      footer { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
+  <header>
     <nav>
-        <a href="project.html">Project</a>
+      <a class="brand" href="#top"><span class="bowlmark" aria-hidden="true"></span><span>IAteNoodles</span></a>
+      <div class="navlinks">
+        <a href="#about">about</a>
+        <a href="#work">projects</a>
+        <a href="#stack">stack</a>
+        <a href="#contact">contact</a>
+      </div>
     </nav>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero">
+      <div>
+        <span class="stamp"><i></i> bengaluru · cs + data science · 2027</span>
+        <h1>hey, i’m <span class="noodles-word">Abhijit</span></h1>
+        <p class="lead">Computer Science & Data Science student building backend-heavy AI systems, healthcare tools, and production software. I work across APIs, retrieval pipelines, deployment, and data-heavy workflows.</p>
+        <div class="quicklinks">
+          <a class="btn primary" href="mailto:thisabhijithere@gmail.com">let’s talk</a>
+          <a class="btn" href="https://github.com/IAteNoodles" target="_blank" rel="noopener noreferrer">github</a>
+          <a class="btn" href="https://linkedin.com/in/iatenoodles" target="_blank" rel="noopener noreferrer">linkedin</a>
+        </div>
+      </div>
+      <aside class="profile-card">
+        <h2><span class="scratch">Model</span> Developer Card</h2>
+        <p>Known online as IAteNoodles. Computer Science student working across AI systems, backend infrastructure, and healthcare workflows.</p>
+        <div class="dev-fields">
+          <div class="dev-field"><span>language</span><span>Python, Java</span></div>
+          <div class="dev-field"><span>domain</span><span>AI/ML, Backend</span></div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini"><b>5×</b><span>hackathon winner</span></div>
+          <div class="mini"><b>18GB+</b><span>docs served in production</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="about">
+      <div class="section-head">
+        <div class="kicker">about me</div>
+        <div>
+          <h2 class="section-title">I like systems that have to work after the demo.</h2>
+          <p class="section-copy">I’m a BE Computer Science & Data Science student at Acharya Institute of Technology. My work sits around AI/ML systems, backend engineering, healthcare AI, and infrastructure — especially where the boring parts like auth, deployment, versioning, retrieval, and performance decide whether the project is real.</p>
+        </div>
+      </div>
+      <div class="about-grid">
+        <div class="card">
+          <h3>currently cooking</h3>
+          <p>A recipe for reading pesky, almost-illegible prescriptions without breaking the entire budget. Also experimenting with LLMs, agent workflows, and my own research direction around knowledge graphs.</p>
+        </div>
+        <div class="card">
+          <h3>education</h3>
+          <p><strong>Acharya Institute of Technology</strong><br>BE in Computer Science & Data Science · Expected 2027 · SGPA 8.965 / 10.0<br><br><strong>Kendriya Vidyalaya Tinsukia</strong><br>Class XII, CBSE · 86.33%</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="section-head">
+        <div class="kicker">selected projects</div>
+        <div>
+          <h2 class="section-title">A few things I’ve built.</h2>
+          <p class="section-copy">A mix of production backend work, healthcare AI systems, and security tooling — presented around the problem, the build, and the engineering contribution.</p>
+        </div>
+      </div>
+      <div class="projects">
+        <article class="project">
+          <div>
+            <h3>RDSO Digital Document Management & Retrieval System</h3>
+            <p>Backend and deployment lead for a digital document management system serving 18GB+ of engineering documents. Implemented authentication, role-based access, document versioning, and performance improvements for remote, low-connectivity use.</p>
+            <div class="tags"><span class="tag">FastAPI</span><span class="tag">PostgreSQL</span><span class="tag">Docker</span><span class="tag">Linux</span><span class="tag">Azure</span></div>
+          </div>
+          <aside>backend lead<br>document management<br>production deployment</aside>
+        </article>
+
+        <article class="project">
+          <div>
+            <h3>PharmaGuard</h3>
+            <p>Pharmacogenomic clinical decision support system that analyzes patient VCF files across 6 pharmacogenes. Integrated PharmCAT-based diplotype extraction, CPIC phenotype mapping, and a rule engine that classifies 14 drugs into safe, adjust, or avoid categories.</p>
+            <div class="tags"><span class="tag">FastAPI</span><span class="tag">PharmCAT</span><span class="tag">CPIC</span><span class="tag">Docker</span></div>
+          </div>
+          <aside>healthcare ai<br>genomic analysis<br>risk classification</aside>
+        </article>
+
+        <article class="project">
+          <div>
+            <h3>MediMax</h3>
+            <p>AI healthcare assistant built around retrieval over structured medical knowledge. Designed modular reasoning workflows with XAI, MCP-based tool orchestration, agentic query handling, and graph-backed context using Neo4j.</p>
+            <div class="tags"><span class="tag">FastAPI</span><span class="tag">RAG</span><span class="tag">MongoDB</span><span class="tag">Neo4j</span><span class="tag">XAI</span><span class="tag">MCP</span><span class="tag">Agents</span></div>
+          </div>
+          <aside>rag system<br>explainable ai<br>agent workflows</aside>
+        </article>
+
+        <article class="project">
+          <div>
+            <h3>Red Shell</h3>
+            <p>Modular red teaming and penetration testing framework for exposing security utilities through controlled MCP-based interfaces. Built isolated Docker environments, agent workflows, and deployment scripts for reproducible testing inside sandbox modules.</p>
+            <div class="tags"><span class="tag">FastAPI</span><span class="tag">MCP</span><span class="tag">Docker</span><span class="tag">Bash</span><span class="tag">Agents</span><span class="tag">Red Teaming</span></div>
+          </div>
+          <aside>red teaming<br>agent workflows<br>sandbox modules</aside>
+        </article>
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="section-head">
+        <div class="kicker">stack</div>
+        <div>
+          <h2 class="section-title">The tools on my desk.</h2>
+          <p class="section-copy">A practical toolkit for building AI systems, backend services, data-heavy workflows, and infra that does not fall apart immediately.</p>
+        </div>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-card"><h3>languages</h3><div class="tags"><span class="tag">Python</span><span class="tag">Java</span><span class="tag">JavaScript</span><span class="tag">Bash</span><span class="tag">Fish (yes, Fish)</span></div></div>
+        <div class="stack-card"><h3>AI / ML</h3><div class="tags"><span class="tag">PyTorch</span><span class="tag">CUDA</span><span class="tag">TensorFlow</span><span class="tag">Hugging Face</span><span class="tag">scikit-learn</span><span class="tag">LangGraph</span><span class="tag">DSPy</span><span class="tag">Ollama</span><span class="tag">vLLM</span><span class="tag">Math</span></div></div>
+        <div class="stack-card"><h3>backend</h3><div class="tags"><span class="tag">FastAPI</span><span class="tag">Flask</span><span class="tag">Django</span></div></div>
+        <div class="stack-card"><h3>databases</h3><div class="tags"><span class="tag">PostgreSQL</span><span class="tag">MariaDB / MySQL</span><span class="tag">MongoDB</span><span class="tag">Redis</span><span class="tag">Neo4j</span><span class="tag">Pinecone</span></div></div>
+        <div class="stack-card"><h3>infra</h3><div class="tags"><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">Git</span><span class="tag">Linux</span><span class="tag">Azure</span><span class="tag">AWS</span><span class="tag">Nginx</span><span class="tag">ngrok</span></div></div>
+        <div class="stack-card"><h3>interests</h3><div class="tags"><span class="tag">Healthcare</span><span class="tag">NLP</span><span class="tag">Informatics</span><span class="tag">CI/CD</span><span class="tag">Agents</span></div></div>
+      </div>
+    </section>
+
+    <section id="leadership">
+      <div class="section-head">
+        <div class="kicker">outside code</div>
+        <div>
+          <h2 class="section-title">Community and competitions.</h2>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="time-row">
+          <div class="date">sep 2024 — present</div>
+          <div><h3>President & Founding Member · The Big O Tech Club</h3><p>Leading a 570+ member AI and cybersecurity community. Organized Ignite O1 Tech Fest with 1500+ participants and served as Core Committee Lead for Tech Habba 2025 with 2500+ participants.</p></div>
+        </div>
+        <div class="time-row">
+          <div class="date">2022 — present</div>
+          <div><h3>Hackathons & competitions</h3><p>Overall Winner at XAttitude 2026 and Neurovex 2K26; 1st Prize in CTF at TechFlix 2026, DSU; 2nd Prize in PromptWars, DSU; 5× Hackathon Winner across SDG Forge, CypherQuest, Indian Data Club, Simba-GPT, and Srujana 2.0.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact-card">
+        <h2>cooking a project?</h2>
+        <p>If it involves backend systems, healthcare, AI/ML, open source, or the kind of idea that needs a little experimentation before it becomes useful, I’d like to hear about it.</p>
+        <div class="quicklinks">
+          <a class="btn primary" href="mailto:thisabhijithere@gmail.com">thisabhijithere@gmail.com</a>
+          <a class="btn" href="tel:+919678781811">+91 96787 81811</a>
+          <a class="btn" href="https://github.com/IAteNoodles" target="_blank" rel="noopener noreferrer">github</a>
+          <a class="btn" href="https://linkedin.com/in/iatenoodles" target="_blank" rel="noopener noreferrer">linkedin</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>IAteNoodles · Abhijit Kumar Singh</span>
+    <span>Bengaluru, India</span>
+  </footer>
 </body>
 </html>
